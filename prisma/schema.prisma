@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  nameEn    String
+  nameAr    String
+  image     String
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id                     String   @id @default(cuid())
+  categoryId             String
+  category               Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  nameEn                 String
+  nameAr                 String
+  descriptionEn          String
+  descriptionAr          String
+  imagesRaw              String
+  itemsPerPallet         Int
+  baseCostEGP            Float
+  conversionRate         Float
+  deliveryCostPerItemILS Float
+  sellingPricePerItemILS Float
+  isActive               Boolean  @default(true)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model AppSettings {
+  id             Int      @id @default(1)
+  whatsappNumber String
+  currencyLabel  String
+  conversionRate Float    @default(0.1)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

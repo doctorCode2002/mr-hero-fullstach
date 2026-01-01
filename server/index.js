@@ -1,14 +1,16 @@
-// server/index.js refactor for resilience
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-// import { PrismaClient } from "@prisma/client"; // Removed for dynamic import safety
-import multer from "multer"; // ES module import for multer
-import path from "path"; // ES module import for path
-import { fileURLToPath } from 'url'; // For __dirname equivalent in ES modules
+// import { PrismaClient } from "@prisma/client"; // Removed for safety
+import multer from "multer";
+import path from "path";
+import { fileURLToPath } from 'url';
+import { createRequire } from 'module'; // Added for safe require
 
 // __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const require = createRequire(import.meta.url);
 
 dotenv.config();
 
@@ -16,8 +18,10 @@ const app = express();
 
 let prisma;
 try {
-  const { PrismaClient } = await import("@prisma/client");
+  // Safe synchronous require to avoid top-level await issues
+  const { PrismaClient } = require("@prisma/client");
   prisma = new PrismaClient();
+  console.log("Prisma Client initialized successfully");
 } catch (error) {
   console.error("Failed to initialize Prisma Client:", error);
 }

@@ -13,7 +13,21 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient();
+
+let prisma;
+try {
+  prisma = new PrismaClient();
+} catch (error) {
+  console.error("Failed to initialize Prisma Client:", error);
+}
+
+// Middleware to ensure DB is ready for DB routes
+const ensureDb = (req, res, next) => {
+  if (!prisma) {
+    return res.status(500).json({ message: "Database not initialized. Check server logs." });
+  }
+  next();
+};
 
 // Multer Storage Configuration
 const storage = multer.diskStorage({
@@ -62,8 +76,10 @@ app.get("/api/debug-auth", (req, res) => {
     message: "Debug Endpoint",
     url: req.url,
     headers: req.headers,
+    dbStatus: prisma ? "Initialized" : "Failed",
     env: {
        hasAdminPass: !!process.env.ADMIN_PASSWORD,
+       hasDbUrl: !!process.env.DATABASE_URL,
        nodeEnv: process.env.NODE_ENV
     }
   });

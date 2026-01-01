@@ -97,17 +97,23 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const loginAdmin = async (password: string) => {
     try {
+      console.log('Attempting login to:', `${API_URL}/auth/login`);
       const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
       });
-      if (!res.ok) throw new Error('Unauthorized');
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Login Failed:', res.status, res.statusText, errorText);
+        throw new Error('Unauthorized');
+      }
       const data = await res.json();
       setAdminToken(data.token);
       setIsAdminAuthenticated(true);
       return true;
     } catch (err) {
+      console.error('Login Exception:', err);
       setIsAdminAuthenticated(false);
       return false;
     }

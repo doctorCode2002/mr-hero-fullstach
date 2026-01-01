@@ -31,7 +31,7 @@ const upload = multer({ storage: storage })
 const PORT = process.env.PORT || 4000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "local-admin-token";
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "*";
 
 const allowedOrigins =
   CLIENT_ORIGIN === "*"
@@ -46,6 +46,42 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use(express.static(path.join(__dirname, '../dist')));
 
 const toCategoryDto = (category) => ({
+  id: category.id,
+  image: category.image,
+  name: {
+    en: category.nameEn,
+    ar: category.nameAr,
+  },
+});
+
+// ... (rest of code)
+
+// Helper to debug Vercel requests
+app.get("/api/debug-auth", (req, res) => {
+  res.json({
+    message: "Debug Endpoint",
+    url: req.url,
+    headers: req.headers,
+    env: {
+       hasAdminPass: !!process.env.ADMIN_PASSWORD,
+       nodeEnv: process.env.NODE_ENV
+    }
+  });
+});
+
+app.post("/api/auth/login", (req, res) => {
+  const { password } = req.body;
+  console.log("Login Attempt:", {
+     received: password, 
+     matchesDefault: password === "admin123", 
+     envPassSet: !!process.env.ADMIN_PASSWORD 
+  });
+  
+  if (password === ADMIN_PASSWORD) {
+    return res.json({ token: ADMIN_TOKEN });
+  }
+  return res.status(401).json({ message: "Invalid password" });
+});
   id: category.id,
   image: category.image,
   name: {

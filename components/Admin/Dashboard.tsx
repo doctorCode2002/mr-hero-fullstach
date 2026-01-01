@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useStore } from '../../store/StoreContext';
 import { Product, Category } from '../../types';
 import { calculateProductPricing, formatCurrency } from '../../utils/calculations';
+import FormattedPrice from '../Shared/FormattedPrice';
 
 const Dashboard: React.FC = () => {
   const {
@@ -55,13 +56,30 @@ const Dashboard: React.FC = () => {
   const totalPallets = products.length;
   const activePallets = products.filter((p) => p.isActive).length;
   const totalInventoryValue = products.reduce(
-    (acc, p) => acc + calculateProductPricing(p, settings.conversionRate).totalSellingPricePerPalletILS,
+    (acc, p) => acc + calculateProductPricing(p, settings.conversionRate).wholesalePricePerPalletILS,
     0
   );
   const averageMargin = products.length
     ? products.reduce((acc, p) => acc + calculateProductPricing(p, settings.conversionRate).profitMarginPercent, 0) /
       products.length
     : 0;
+  
+  const handleImageUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      // In a real app, use the configured API_URL
+      const res = await fetch('http://localhost:4000/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      return data.url;
+    } catch (err) {
+      console.error('Upload failed', err);
+      return null;
+    }
+  };
 
   const handleSaveProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -98,7 +116,7 @@ const Dashboard: React.FC = () => {
     const categoryData: Omit<Category, 'id'> = {
       name: { ar: formData.get('nameAr') as string, en: formData.get('nameAr') as string },
       image:
-        (formData.get('image') as string) ||
+        (formData.get('imageUrl') as string) ||
         'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800',
     };
 
@@ -200,14 +218,20 @@ const Dashboard: React.FC = () => {
                 { label: t.stats.total, value: totalPallets, sub: 'إجمالي الطلبيات', color: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600' },
                 { label: t.stats.active, value: activePallets, sub: 'حاليًا نشط', color: 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600' },
                 { label: t.stats.margin, value: `${averageMargin.toFixed(1)}%`, sub: 'هامش الربح >15%', color: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600' },
-                { label: t.stats.potential, value: formatCurrency(totalInventoryValue, 'ILS', language), sub: 'قيمة المخزون', color: 'bg-amber-50 dark:bg-amber-900/20 text-amber-600' },
+                { label: t.stats.potential, value: totalInventoryValue, sub: 'قيمة المخزون', color: 'bg-amber-50 dark:bg-amber-900/20 text-amber-600', isCurrency: true },
               ].map((stat, i) => (
                 <div
                   key={i}
                   className="bg-white dark:bg-gray-900 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm transition-all hover:shadow-md"
                 >
                   <span className={`inline-block mb-4 px-3 py-1 rounded-full font-black text-[10px] uppercase tracking-widest ${stat.color}`}>{stat.label}</span>
-                  <p className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">{stat.value}</p>
+                  <div className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white english-nums">
+                    {stat.isCurrency ? (
+                        <FormattedPrice amount={Number(stat.value)} currency="ILS" className="text-2xl md:text-3xl" />
+                    ) : (
+                        stat.value
+                    )}
+                  </div>
                   <p className="text-xs text-gray-400 font-bold mt-1">{stat.sub}</p>
                 </div>
               ))}
@@ -254,22 +278,33 @@ const Dashboard: React.FC = () => {
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 md:px-8 py-5">
-                            <p className="text-sm md:text-base font-black text-gray-900 dark:text-white">
-                              {formatCurrency(pricing.totalSellingPricePerPalletILS, 'ILS', language)}
-                            </p>
-                            <p className="text-[11px] text-gray-400 font-bold uppercase">{p.itemsPerPallet} وحدة/طبلية</p>
+                          <td className="px-6 md:px-8 py-5 text-center">
+                            <div className="flex flex-col items-center justify-center">
+                                <FormattedPrice 
+                                    amount={pricing.wholesalePricePerPalletILS} 
+                                    currency="ILS" 
+                                    className="text-sm md:text-base font-black text-gray-900 dark:text-white justify-center"
+                                />
+                                <p className="text-[11px] text-gray-400 font-bold uppercase english-nums mt-1">{p.itemsPerPallet} وحدة/طبلية</p>
+                            </div>
                           </td>
                           <td className="px-6 md:px-8 py-5 text-center">
-                            <p className="text-xs md:text-sm font-black text-gray-700 dark:text-gray-300">
-                              {formatCurrency(pricing.convertedCostILS + p.deliveryCostPerItemILS, 'ILS', language)} / وحدة
-                            </p>
+                            <div className="flex items-center justify-center gap-1">
+                                <FormattedPrice 
+                                    amount={pricing.wholesalePricePerItemILS} 
+                                    currency="ILS" 
+                                    className="text-xs md:text-sm font-black text-gray-700 dark:text-gray-300"
+                                />
+                                <span className="text-xs md:text-sm font-black text-gray-700 dark:text-gray-300">/ وحدة</span>
+                            </div>
                           </td>
                           <td className="px-6 md:px-8 py-5 text-center">
-                            <span className="text-sm md:text-base font-black text-emerald-600">
-                              +{formatCurrency(pricing.totalProfitPerPalletILS, 'ILS', language)}
-                            </span>
-                            <div className="text-[10px] font-black text-emerald-500/70">{pricing.profitMarginPercent.toFixed(1)}%</div>
+                            <FormattedPrice 
+                                amount={pricing.totalPotentialProfitPerPalletILS} 
+                                currency="ILS" 
+                                className="text-sm md:text-base font-black text-emerald-600 justify-center"
+                            />
+                            <div className="text-[10px] font-black text-emerald-500/70 english-nums">{pricing.profitMarginPercent.toFixed(1)}%</div>
                           </td>
                           <td className="px-6 md:px-8 py-5 text-left">
                             <div className="flex gap-1 md:gap-2">
@@ -430,6 +465,41 @@ const Dashboard: React.FC = () => {
                     className="w-full bg-gray-50 dark:bg-gray-800 p-4 md:p-5 rounded-xl md:rounded-2xl dark:text-white h-24 md:h-32 text-right outline-none focus:ring-2 ring-emerald-500 shadow-inner"
                   />
                 </div>
+                <div className="space-y-4 bg-gray-50 dark:bg-gray-800 p-5 rounded-2xl">
+                   <div className="space-y-2">
+                     <label className="text-[10px] md:text-[11px] font-black text-gray-400 uppercase">صورة المنتج</label>
+                     <input
+                       type="file"
+                       accept="image/*"
+                       onChange={async (e) => {
+                         const file = e.target.files?.[0];
+                         if (file) {
+                           const url = await handleImageUpload(file);
+                           if (url) {
+                             setEditingProduct(prev => prev ? ({ ...prev, images: [url] }) : null);
+                             const input = document.getElementById('imageUrl') as HTMLInputElement;
+                             if(input) input.value = url;
+                           }
+                         }
+                       }}
+                       className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 dark:file:bg-emerald-900/30 dark:file:text-emerald-400"
+                     />
+                     <input 
+                        id="imageUrl" 
+                        name="images" 
+                        type="hidden" 
+                        defaultValue={editingProduct?.images[0]} 
+                     />
+                     {(editingProduct?.images[0] || (document.getElementById('imageUrl') as HTMLInputElement)?.value) && (
+                       <img 
+                          src={editingProduct?.images[0]} 
+                          className="w-full h-32 object-cover rounded-xl mt-2" 
+                          id="preview-image"
+                       />
+                     )}
+                   </div>
+                </div>
+
                 <div className="flex items-center gap-4 p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl">
                   <input
                     type="checkbox"
@@ -554,11 +624,36 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-[11px] font-black text-gray-400 uppercase">صورة</label>
-                <input
-                  name="image"
+                 <input
+                   type="file"
+                   accept="image/*"
+                   onChange={async (e) => {
+                     const file = e.target.files?.[0];
+                     if (file) {
+                       const url = await handleImageUpload(file);
+                       if (url) {
+                         setEditingCategory(prev => prev ? ({ ...prev, image: url }) : null);
+                         const input = document.getElementById('catImageUrl') as HTMLInputElement;
+                         if(input) input.value = url;
+                       }
+                     }
+                   }}
+                   className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 dark:file:bg-emerald-900/30 dark:file:text-emerald-400"
+                 />
+                 <input
+                  id="catImageUrl"
+                  name="imageUrl"
+                  type="hidden"
                   defaultValue={editingCategory?.image}
-                  className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-xl dark:text-white font-bold outline-none focus:ring-2 ring-emerald-500"
                 />
+                 
+                 {(editingCategory?.image || (document.getElementById('catImageUrl') as HTMLInputElement)?.value) && (
+                   <img 
+                      src={editingCategory?.image} 
+                      className="w-full h-32 object-cover rounded-xl mt-2 bg-gray-50" 
+                      id="preview-cat-image"
+                   />
+                 )}
               </div>
             </div>
             <div className="px-8 py-6 border-t border-gray-50 dark:border-gray-800 flex justify-end gap-3 bg-gray-50/60 dark:bg-gray-800/30">

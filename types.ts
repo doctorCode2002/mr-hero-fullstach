@@ -44,11 +44,9 @@ export interface AppSettings {
 
 export interface CalculatedPricing {
   convertedCostILS: number;
-  profitPerItemILS: number;
+  wholesalePricePerItemILS: number;
+  potentialProfitPerItemILS: number;
   profitMarginPercent: number;
-  itemCostPerPalletILS: number;
-  deliveryCostPerPalletILS: number;
-  totalCostPerPalletILS: number;
-  totalSellingPricePerPalletILS: number;
-  totalProfitPerPalletILS: number;
+  wholesalePricePerPalletILS: number;
+  totalPotentialProfitPerPalletILS: number;
 }

@@ -2,27 +2,34 @@
 import { Product, CalculatedPricing } from '../types';
 
 export const calculateProductPricing = (product: Product, overrideConversionRate?: number): CalculatedPricing => {
+  // Conversion Rate is now expected to be "How many EGP in 1 ILS" (e.g. 13.5)
+  // To get ILS from EGP, we DIVIDE by the rate.
   const conversionRate = overrideConversionRate ?? product.conversionRate;
-  const convertedCostILS = product.baseCostEGP * conversionRate;
-  const profitPerItemILS = product.sellingPricePerItemILS - (convertedCostILS + product.deliveryCostPerItemILS);
-  const profitMarginPercent = (profitPerItemILS / product.sellingPricePerItemILS) * 100;
-
-  const itemCostPerPalletILS = convertedCostILS * product.itemsPerPallet;
-  const deliveryCostPerPalletILS = product.deliveryCostPerItemILS * product.itemsPerPallet;
   
-  const totalSellingPricePerPalletILS = product.sellingPricePerItemILS * product.itemsPerPallet;
-  const totalCostPerPalletILS = itemCostPerPalletILS + deliveryCostPerPalletILS;
-  const totalProfitPerPalletILS = totalSellingPricePerPalletILS - totalCostPerPalletILS;
+  // Guard against zero division
+  const safeRate = conversionRate === 0 ? 1 : conversionRate;
+  const convertedCostILS = product.baseCostEGP / safeRate;
+
+  // Cost per item (Base + Delivery) -> This is now the "Wholesale Price" the customer pays.
+  const wholesalePricePerItemILS = convertedCostILS + product.deliveryCostPerItemILS;
+
+  // Profit (margin for the customer) = Their Selling Price (RRP) - What they pay us (Wholesale)
+  const potentialProfitPerItemILS = product.sellingPricePerItemILS - wholesalePricePerItemILS;
+  const profitMarginPercent = (potentialProfitPerItemILS / product.sellingPricePerItemILS) * 100;
+
+  // Pallet Totals
+  const wholesalePricePerPalletILS = wholesalePricePerItemILS * product.itemsPerPallet;
+  
+  // The "Total Profit" for the customer if they sell the whole pallet
+  const totalPotentialProfitPerPalletILS = potentialProfitPerItemILS * product.itemsPerPallet;
 
   return {
     convertedCostILS,
-    profitPerItemILS,
+    wholesalePricePerItemILS, // Was profitPerItemILS (renamed concept)
+    potentialProfitPerItemILS,
     profitMarginPercent,
-    itemCostPerPalletILS,
-    deliveryCostPerPalletILS,
-    totalCostPerPalletILS,
-    totalSellingPricePerPalletILS,
-    totalProfitPerPalletILS,
+    wholesalePricePerPalletILS, // The main price to show
+    totalPotentialProfitPerPalletILS,
   };
 };
 

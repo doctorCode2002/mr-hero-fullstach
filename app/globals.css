@@ -28,6 +28,7 @@ body {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  font-size: 95%; /* Reduce global font size */
 }
 
 /* Custom scrollbar for webkit */
@@ -54,4 +55,11 @@ html {
 
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #334155;
+}
+
+@layer utilities {
+  .english-nums {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    unicode-bidi: isolate;
+  }
 }

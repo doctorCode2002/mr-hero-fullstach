@@ -2,11 +2,31 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
+import multer from "multer"; // ES module import for multer
+import path from "path"; // ES module import for path
+import { fileURLToPath } from 'url'; // For __dirname equivalent in ES modules
+
+// __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
 const app = express();
 const prisma = new PrismaClient();
+
+// Multer Storage Configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/') // Make sure this folder exists
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({ storage: storage })
 
 const PORT = process.env.PORT || 4000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
@@ -20,6 +40,10 @@ const allowedOrigins =
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 const toCategoryDto = (category) => ({
   id: category.id,
@@ -69,6 +93,19 @@ const requireAdmin = (req, res, next) => {
   }
   next();
 };
+
+// Upload Endpoint
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+  // Construct URL. In production, use full domain or relative path if proxied correctly.
+  // Here we return a relative path that the frontend can prepend with API_URL or base.
+  // Actually, simplest is to return full URL if we know the host, or just the path.
+  // Let's return the path relative to server root, which client accesses via http://localhost:4000/uploads/...
+  const fileUrl = `${process.env.API_URL || 'http://localhost:4000'}/uploads/${req.file.filename}`;
+  res.json({ url: fileUrl });
+});
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
@@ -213,14 +250,22 @@ app.put("/api/settings", requireAdmin, async (req, res, next) => {
   }
 });
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
 app.use((err, req, res, _next) => {
   console.error(err);
   res.status(500).json({ message: "Server error" });
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`API running on http://localhost:${PORT}`);
-});
+export { app };
+
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+  const server = app.listen(PORT, () => {
+    console.log(`API running on http://localhost:${PORT}`);
+  });
+}
 
 const shutdown = async () => {
   await prisma.$disconnect();

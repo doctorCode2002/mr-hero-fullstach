@@ -4,6 +4,7 @@
 import React from 'react';
 import { useStore } from '../../store/StoreContext';
 import { calculateProductPricing, formatCurrency } from '../../utils/calculations';
+import FormattedPrice from '../Shared/FormattedPrice';
 
 interface Props {
   isOpen: boolean;
@@ -17,7 +18,14 @@ const Cart: React.FC<Props> = ({ isOpen, onClose }) => {
     const product = products.find(p => p.id === item.productId);
     if (!product) return acc;
     const pricing = calculateProductPricing(product, settings.conversionRate);
-    return acc + (pricing.totalSellingPricePerPalletILS * item.quantity);
+    return acc + (pricing.wholesalePricePerPalletILS * item.quantity);
+  }, 0);
+
+  const cartTotalProfit = cart.reduce((acc, item) => {
+    const product = products.find(p => p.id === item.productId);
+    if (!product) return acc;
+    const pricing = calculateProductPricing(product, settings.conversionRate);
+    return acc + (pricing.totalPotentialProfitPerPalletILS * item.quantity);
   }, 0);
 
   const handleCheckout = () => {
@@ -71,21 +79,25 @@ const Cart: React.FC<Props> = ({ isOpen, onClose }) => {
                   <img src={product.images[0]} className="w-20 h-20 rounded-xl object-cover shadow-sm" alt="" />
                   <div className="flex-grow text-right">
                     <h4 className="font-black text-gray-900 dark:text-white text-base line-clamp-1 mb-1">{product.name[language]}</h4>
-                    <p className="text-xs text-gray-400 font-bold mb-3">{product.itemsPerPallet} قطعة/طبلية</p>
+                    <p className="text-xs text-gray-400 font-bold mb-3"><span className="english-nums">{product.itemsPerPallet}</span> قطعة/طبلية</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <button 
                           onClick={() => updateCartQuantity(item.productId, item.quantity - 1)}
                           className="w-8 h-8 flex items-center justify-center border border-gray-100 dark:border-gray-800 rounded-lg text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                         >-</button>
-                        <span className="text-sm font-black w-6 text-center text-gray-900 dark:text-white">{item.quantity}</span>
+                        <span className="text-sm font-black w-6 text-center text-gray-900 dark:text-white english-nums">{item.quantity}</span>
                         <button 
                           onClick={() => updateCartQuantity(item.productId, item.quantity + 1)}
                           className="w-8 h-8 flex items-center justify-center border border-gray-100 dark:border-gray-800 rounded-lg text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                         >+</button>
                       </div>
                       <p className="text-lg font-black text-gray-900 dark:text-white">
-                        {formatCurrency(pricing.totalSellingPricePerPalletILS * item.quantity, 'ILS', language)}
+                        <FormattedPrice 
+                          amount={pricing.wholesalePricePerPalletILS * item.quantity} 
+                          currency="ILS" 
+                          className="text-lg font-black text-gray-900 dark:text-white"
+                        />
                       </p>
                     </div>
                   </div>
@@ -102,10 +114,14 @@ const Cart: React.FC<Props> = ({ isOpen, onClose }) => {
 
         {cart.length > 0 && (
           <div className="p-8 border-t border-gray-50 dark:border-gray-900 bg-gray-50/50 dark:bg-gray-900/30 space-y-6">
-            <div className="flex justify-between items-center text-2xl font-black text-gray-900 dark:text-white">
-              <span>الإجمالي</span>
-              <span>{formatCurrency(cartTotal, 'ILS', language)}</span>
-            </div>
+             <div className="flex justify-between items-center text-2xl font-black text-gray-900 dark:text-white">
+               <span>الإجمالي</span>
+               <FormattedPrice amount={cartTotal} currency="ILS" className="text-2xl" />
+             </div>
+             <div className="flex justify-between items-center text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                <span>إجمالي الربح المتوقع</span>
+                <FormattedPrice amount={cartTotalProfit} currency="ILS" className="text-sm" />
+             </div>
             <button 
               onClick={handleCheckout}
               className="w-full bg-[#25D366] text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:bg-[#20ba59] transition-all shadow-xl shadow-emerald-200/20 active:scale-95"
@@ -113,7 +129,7 @@ const Cart: React.FC<Props> = ({ isOpen, onClose }) => {
               إتمام الطلب عبر واتساب
             </button>
             <p className="text-[11px] text-center text-gray-400 font-black uppercase tracking-widest">
-              التوصيل مشمول في جميع المبالغ الإجمالية.
+              السعر يشمل تكلفة القطع والتوصيل حتى باب المستودع.
             </p>
           </div>
         )}

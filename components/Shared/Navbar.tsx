@@ -2,10 +2,14 @@
 "use client";
 
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useStore } from '../../store/StoreContext';
 
 const Navbar: React.FC = () => {
-  const { theme, toggleTheme, isAdmin, setIsAdmin, searchTerm, setSearchTerm } = useStore();
+  const { theme, toggleTheme, searchTerm, setSearchTerm } = useStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   const t = {
     search: 'بحث عن فئات، ماركات، أو أصناف...',
@@ -19,7 +23,7 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center gap-4 md:gap-6">
           <div 
             className="flex items-center gap-2 cursor-pointer flex-shrink-0 group"
-            onClick={() => setIsAdmin(false)}
+            onClick={() => navigate('/')}
           >
             <div className="w-8 h-8 md:w-9 md:h-9 bg-gray-900 dark:bg-emerald-600 rounded-lg md:rounded-xl flex items-center justify-center transition-all group-hover:rotate-6 shadow-md">
               <span className="text-white font-black text-lg md:text-xl leading-none">H</span>
@@ -30,19 +34,7 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="hidden md:flex flex-grow max-w-lg relative">
-            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              placeholder={t.search}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-900 border-none rounded-xl py-2.5 pr-10 pl-4 text-sm dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-800 transition-all outline-none text-right"
-              dir="rtl"
-            />
+            {/* Search moved to HomePage */}
           </div>
 
           <div className="flex items-center gap-2 md:gap-3">
@@ -59,10 +51,10 @@ const Navbar: React.FC = () => {
             </button>
 
             <button 
-              onClick={() => setIsAdmin(!isAdmin)}
+              onClick={() => navigate(isAdminRoute ? '/' : '/admin')}
               className="bg-gray-900 dark:bg-emerald-600 text-white px-4 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl text-xs md:text-sm font-black shadow-lg shadow-gray-200/50 dark:shadow-none hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
             >
-              {isAdmin ? t.store : t.adminDashboard}
+              {isAdminRoute ? t.store : t.adminDashboard}
             </button>
           </div>
         </div>

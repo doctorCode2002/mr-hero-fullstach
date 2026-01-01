@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 // import { PrismaClient } from "@prisma/client"; // Removed for safety
 import multer from "multer";
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import path from "path";
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module'; // Added for safe require
@@ -35,15 +37,21 @@ const ensureDb = (req, res, next) => {
 };
 
 // Multer Storage Configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/') // Make sure this folder exists
+// Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Multer Cloudinary Storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'pallet-wholesale',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
   },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, uniqueSuffix + path.extname(file.originalname))
-  }
-})
+});
 
 const upload = multer({ storage: storage })
 
@@ -150,12 +158,8 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
-  // Construct URL. In production, use full domain or relative path if proxied correctly.
-  // Here we return a relative path that the frontend can prepend with API_URL or base.
-  // Actually, simplest is to return full URL if we know the host, or just the path.
-  // Let's return the path relative to server root, which client accesses via http://localhost:4000/uploads/...
-  const fileUrl = `${process.env.API_URL || 'http://localhost:4000'}/uploads/${req.file.filename}`;
-  res.json({ url: fileUrl });
+  // Cloudinary storage provides the URL in req.file.path
+  res.json({ url: req.file.path });
 });
 
 app.get("/api/health", (req, res) => {

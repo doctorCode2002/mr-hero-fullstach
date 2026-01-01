@@ -103,13 +103,7 @@ app.post("/api/auth/login", (req, res) => {
   }
   return res.status(401).json({ message: "Invalid password" });
 });
-  id: category.id,
-  image: category.image,
-  name: {
-    en: category.nameEn,
-    ar: category.nameAr,
-  },
-});
+
 
 const toProductDto = (product) => ({
   id: product.id,

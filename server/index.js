@@ -1,7 +1,7 @@
-import express from "express";
+// server/index.js refactor for resilience
 import cors from "cors";
 import dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client"; // Removed for dynamic import safety
 import multer from "multer"; // ES module import for multer
 import path from "path"; // ES module import for path
 import { fileURLToPath } from 'url'; // For __dirname equivalent in ES modules
@@ -16,6 +16,7 @@ const app = express();
 
 let prisma;
 try {
+  const { PrismaClient } = await import("@prisma/client");
   prisma = new PrismaClient();
 } catch (error) {
   console.error("Failed to initialize Prisma Client:", error);
@@ -313,15 +314,21 @@ app.use((err, req, res, _next) => {
 
 export { app };
 
+let server;
 if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
-  const server = app.listen(PORT, () => {
+  server = app.listen(PORT, () => {
     console.log(`API running on http://localhost:${PORT}`);
   });
 }
 
 const shutdown = async () => {
-  await prisma.$disconnect();
-  server.close(() => process.exit(0));
+  try {
+    if (prisma) await prisma.$disconnect();
+    if (server) server.close(() => process.exit(0));
+  } catch (e) {
+    console.error("Error during shutdown:", e);
+    process.exit(1);
+  }
 };
 
 process.on("SIGINT", shutdown);

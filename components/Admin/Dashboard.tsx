@@ -69,7 +69,7 @@ const Dashboard: React.FC = () => {
     formData.append('image', file);
     try {
       // In a real app, use the configured API_URL
-      const res = await fetch('http://localhost:4000/api/upload', {
+      const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });

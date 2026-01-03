@@ -93,7 +93,8 @@ app.get("/api/debug-auth", (req, res) => {
     env: {
        hasAdminPass: !!process.env.ADMIN_PASSWORD,
        hasDbUrl: !!process.env.DATABASE_URL,
-       nodeEnv: process.env.NODE_ENV
+       nodeEnv: process.env.NODE_ENV,
+       deployTime: "2026-01-03 18:10:00"
     }
   });
 });

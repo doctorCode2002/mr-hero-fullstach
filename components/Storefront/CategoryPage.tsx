@@ -37,13 +37,13 @@ const CategoryPage: React.FC = () => {
   return (
     <div className="animate-in fade-in duration-700">
       {/* Category Header */}
-      <section className="bg-gray-50 dark:bg-gray-900/30 pt-20 pb-32 border-b border-gray-100 dark:border-gray-800 relative overflow-hidden">
+      <section className="bg-orange-50 dark:bg-gray-900/30 pt-20 pb-32 border-b-4 border-white dark:border-gray-800 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 relative z-10">
             <button 
                 onClick={() => navigate('/')}
-                className="group mb-8 flex items-center gap-3 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all w-fit p-2 -mr-2 rounded-xl active:bg-gray-100 dark:active:bg-gray-800 touch-manipulation"
+                className="group mb-8 flex items-center gap-3 text-orange-700 hover:text-orange-900 dark:text-gray-400 dark:hover:text-white transition-all w-fit p-2 -mr-2 rounded-xl active:bg-orange-100 dark:active:bg-gray-800 touch-manipulation"
             >
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-800 border-2 border-orange-200 dark:border-gray-700 flex items-center justify-center group-hover:bg-orange-500 group-hover:border-orange-500 group-hover:text-white group-hover:scale-110 transition-all text-orange-600">
                     <svg className="w-5 h-5 md:w-6 md:h-6 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                 </div>
                 <span className="font-black text-lg md:text-xl">العودة للرئيسية</span>
@@ -68,7 +68,7 @@ const CategoryPage: React.FC = () => {
       {/* Search Bar */}
       <div className="max-w-2xl mx-auto px-4 -mt-8 relative z-20">
         <div className="relative shadow-xl rounded-2xl">
-            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400">
+            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-orange-500">
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -78,7 +78,7 @@ const CategoryPage: React.FC = () => {
               placeholder="ابحث عن منتج..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-white dark:bg-gray-800 border-2 border-white dark:border-gray-700 focus:border-emerald-500 rounded-2xl py-5 pr-14 pl-6 text-lg font-bold dark:text-white shadow-sm transition-all outline-none text-right placeholder-gray-400"
+              className="w-full bg-white border-4 border-white focus:border-orange-500 rounded-2xl py-5 pr-14 pl-6 text-lg font-bold transition-all outline-none text-right placeholder-gray-400 focus:ring-4 focus:ring-orange-500/20"
               dir="rtl"
             />
         </div>
@@ -96,7 +96,7 @@ const CategoryPage: React.FC = () => {
                     <ProductCard 
                         key={p.id} 
                         product={p} 
-                        onViewDetails={(prod) => setSelectedProduct(prod)} 
+                        onViewDetails={(prod) => navigate(`/product/${prod.id}`)} 
                     />
                 ))}
             </div>
@@ -120,7 +120,7 @@ const CategoryPage: React.FC = () => {
                  <p className="mb-6 text-gray-500">{selectedProduct.description[language]}</p>
                  <button 
                     onClick={() => { addToCart(selectedProduct.id, 1); setSelectedProduct(null); }}
-                    className="bg-emerald-600 text-white w-full py-4 rounded-xl font-bold hover:bg-emerald-700"
+                    className="bg-orange-600 text-white w-full py-4 rounded-xl font-bold hover:bg-orange-700"
                  >
                      إضافة للسلة
                  </button>

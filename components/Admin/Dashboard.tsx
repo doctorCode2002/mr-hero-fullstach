@@ -27,7 +27,6 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'inventory' | 'categories' | 'business'>('inventory');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [settingsForm, setSettingsForm] = useState({
     whatsappNumber: settings.whatsappNumber,
@@ -98,12 +97,12 @@ const Dashboard: React.FC = () => {
     };
 
     try {
-      if (editingProduct) {
+      if (editingProduct?.id) {
         await updateProduct({ ...editingProduct, ...productData });
         setEditingProduct(null);
       } else {
         await addProduct(productData);
-        setIsAddingProduct(false);
+        setEditingProduct(null);
       }
     } catch (err) {
       console.error('Failed to save product', err);
@@ -174,8 +173,20 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="flex w-full md:w-auto gap-3">
               <button
-                onClick={() => setIsAddingProduct(true)}
-                className="flex-1 md:flex-none bg-gray-900 dark:bg-emerald-600 text-white px-5 md:px-6 py-3 rounded-xl md:rounded-2xl font-black text-xs md:text-sm hover:scale-105 transition-all shadow-lg"
+                onClick={() => setEditingProduct({
+                  id: '',
+                  categoryId: categories[0]?.id || '',
+                  images: [],
+                  name: { en: '', ar: '' },
+                  description: { en: '', ar: '' },
+                  itemsPerPallet: 1,
+                  baseCostEGP: 0,
+                  conversionRate: settings.conversionRate,
+                  deliveryCostPerItemILS: 0,
+                  sellingPricePerItemILS: 0,
+                  isActive: true
+                })}
+                className="flex-1 md:flex-none bg-orange-500 text-white px-5 md:px-6 py-3 rounded-xl md:rounded-2xl font-black text-xs md:text-sm hover:scale-105 transition-all shadow-lg"
               >
                 {t.newPallet}
               </button>
@@ -203,7 +214,7 @@ const Dashboard: React.FC = () => {
               >
                 <span className="text-xl">{tab.icon}</span>
                 {tab.label}
-                {activeTab === tab.id && <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-900 dark:bg-emerald-600 rounded-full" />}
+                {activeTab === tab.id && <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange-500 rounded-full" />}
               </button>
             ))}
           </div>
@@ -215,9 +226,9 @@ const Dashboard: React.FC = () => {
           <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {[
-                { label: t.stats.total, value: totalPallets, sub: 'إجمالي الطلبيات', color: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600' },
-                { label: t.stats.active, value: activePallets, sub: 'حاليًا نشط', color: 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600' },
-                { label: t.stats.margin, value: `${averageMargin.toFixed(1)}%`, sub: 'هامش الربح >15%', color: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600' },
+                { label: t.stats.total, value: totalPallets, sub: 'إجمالي الطلبيات', color: 'bg-orange-50 text-orange-700 dark:bg-orange-900/15' },
+                { label: t.stats.active, value: activePallets, sub: 'حاليًا نشط', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/15' },
+                { label: t.stats.margin, value: `${averageMargin.toFixed(1)}%`, sub: 'هامش الربح >15%', color: 'bg-orange-50 text-orange-700 dark:bg-orange-900/15' },
                 { label: t.stats.potential, value: totalInventoryValue, sub: 'قيمة المخزون', color: 'bg-amber-50 dark:bg-amber-900/20 text-amber-600', isCurrency: true },
               ].map((stat, i) => (
                 <div
@@ -299,18 +310,18 @@ const Dashboard: React.FC = () => {
                             </div>
                           </td>
                           <td className="px-6 md:px-8 py-5 text-center">
-                            <FormattedPrice 
-                                amount={pricing.totalPotentialProfitPerPalletILS} 
-                                currency="ILS" 
-                                className="text-sm md:text-base font-black text-emerald-600 justify-center"
-                            />
-                            <div className="text-[10px] font-black text-emerald-500/70 english-nums">{pricing.profitMarginPercent.toFixed(1)}%</div>
+                                <FormattedPrice 
+                                    amount={pricing.totalPotentialProfitPerPalletILS} 
+                                    currency="ILS" 
+                                    className="text-sm md:text-base font-black text-orange-600 justify-center"
+                                />
+                            <div className="text-[10px] font-black text-orange-500/80 english-nums">{pricing.profitMarginPercent.toFixed(1)}%</div>
                           </td>
                           <td className="px-6 md:px-8 py-5 text-left">
                             <div className="flex gap-1 md:gap-2">
                               <button
                                 onClick={() => setEditingProduct(p)}
-                                className="p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all"
+                                className="p-2 text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-all"
                               >
                                 <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -342,7 +353,7 @@ const Dashboard: React.FC = () => {
               <h3 className="text-xl font-black text-gray-900 dark:text-white">إدارة الفئات</h3>
               <button
                 onClick={() => setIsAddingCategory(true)}
-                className="bg-gray-900 dark:bg-emerald-600 text-white px-5 py-3 rounded-xl font-black text-sm hover:scale-105 transition-all shadow-lg"
+                className="bg-orange-500 text-white px-5 py-3 rounded-xl font-black text-sm hover:scale-105 transition-all shadow-lg"
               >
                 + إضافة فئة
               </button>
@@ -361,7 +372,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={() => setEditingCategory(c)}
-                        className="px-3 py-2 rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                        className="px-3 py-2 rounded-lg text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20"
                       >
                         تعديل
                       </button>
@@ -390,7 +401,7 @@ const Dashboard: React.FC = () => {
                     <input
                       value={settingsForm.whatsappNumber}
                       onChange={(e) => setSettingsForm((prev) => ({ ...prev, whatsappNumber: e.target.value }))}
-                      className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-xl dark:text-white font-bold outline-none focus:ring-2 ring-emerald-500"
+                      className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-xl dark:text-white font-bold outline-none focus:ring-2 ring-orange-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -398,7 +409,7 @@ const Dashboard: React.FC = () => {
                     <input
                       value={settingsForm.currencyLabel}
                       onChange={(e) => setSettingsForm((prev) => ({ ...prev, currencyLabel: e.target.value }))}
-                      className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-xl dark:text-white font-bold outline-none focus:ring-2 ring-emerald-500"
+                      className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-xl dark:text-white font-bold outline-none focus:ring-2 ring-orange-500"
                     />
                   </div>
                 </div>
@@ -409,14 +420,14 @@ const Dashboard: React.FC = () => {
                     step="0.0001"
                     value={settingsForm.conversionRate}
                     onChange={(e) => setSettingsForm((prev) => ({ ...prev, conversionRate: Number(e.target.value) }))}
-                    className="w-full bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-xl dark:text-white font-black outline-none focus:ring-2 ring-emerald-500"
+                    className="w-full bg-orange-50 p-4 rounded-xl dark:text-white font-black outline-none focus:ring-2 ring-orange-500"
                   />
                   <p className="text-xs text-gray-400 font-bold">يتم تطبيق هذا السعر على جميع المنتجات.</p>
                 </div>
                 <div className="flex justify-end">
                   <button
                     type="submit"
-                    className="px-6 py-3 bg-gray-900 dark:bg-emerald-600 text-white rounded-xl font-black hover:scale-105 transition-all shadow-lg"
+                    className="px-6 py-3 bg-orange-500 text-white rounded-xl font-black hover:scale-105 transition-all shadow-lg"
                   >
                     حفظ الإعدادات
                   </button>
@@ -427,20 +438,20 @@ const Dashboard: React.FC = () => {
         )}
       </div>
 
-      {(isAddingProduct || editingProduct) && (
+      {(editingProduct) && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-0 md:p-4 overflow-hidden">
-          <div className="absolute inset-0 bg-gray-950/70 backdrop-blur-md" onClick={() => { setIsAddingProduct(false); setEditingProduct(null); }} />
+          <div className="absolute inset-0 bg-gray-950/70 backdrop-blur-md" onClick={() => setEditingProduct(null)} />
           <form
             onSubmit={handleSaveProduct}
             className="relative bg-white dark:bg-gray-900 w-full h-full md:h-auto md:max-w-4xl md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[100vh] md:max-h-[95vh] transition-all border-none md:border border-gray-100 dark:border-gray-800"
           >
             <div className="px-6 md:px-10 py-6 md:py-8 border-b border-gray-50 dark:border-gray-900 flex justify-between items-center">
               <h3 className="text-xl md:text-2xl font-black text-gray-900 dark:text-white">
-                {editingProduct ? 'تعديل المنتج' : 'إضافة طبلية جديدة'}
+                {editingProduct?.id ? 'تعديل المنتج' : 'إضافة طبلية جديدة'}
               </h3>
               <button
                 type="button"
-                onClick={() => { setIsAddingProduct(false); setEditingProduct(null); }}
+                onClick={() => setEditingProduct(null)}
                 className="text-gray-400 hover:text-gray-900 dark:hover:text-white text-2xl"
               >
                 ×
@@ -454,7 +465,7 @@ const Dashboard: React.FC = () => {
                     name="nameAr"
                     defaultValue={editingProduct?.name.ar}
                     required
-                    className="w-full bg-gray-50 dark:bg-gray-800 p-4 md:p-5 rounded-xl md:rounded-2xl dark:text-white text-right outline-none focus:ring-2 ring-emerald-500 font-bold shadow-inner"
+                    className="w-full bg-gray-50 dark:bg-gray-800 p-4 md:p-5 rounded-xl md:rounded-2xl dark:text-white text-right outline-none focus:ring-2 ring-orange-500 font-bold shadow-inner"
                   />
                 </div>
                 <div className="space-y-2">
@@ -462,52 +473,59 @@ const Dashboard: React.FC = () => {
                   <textarea
                     name="descAr"
                     defaultValue={editingProduct?.description.ar}
-                    className="w-full bg-gray-50 dark:bg-gray-800 p-4 md:p-5 rounded-xl md:rounded-2xl dark:text-white h-24 md:h-32 text-right outline-none focus:ring-2 ring-emerald-500 shadow-inner"
+                    className="w-full bg-gray-50 dark:bg-gray-800 p-4 md:p-5 rounded-xl md:rounded-2xl dark:text-white h-24 md:h-32 text-right outline-none focus:ring-2 ring-orange-500 shadow-inner"
                   />
                 </div>
                 <div className="space-y-4 bg-gray-50 dark:bg-gray-800 p-5 rounded-2xl">
                    <div className="space-y-2">
-                     <label className="text-[10px] md:text-[11px] font-black text-gray-400 uppercase">صورة المنتج</label>
-                     <input
-                       type="file"
-                       accept="image/*"
-                       onChange={async (e) => {
-                         const file = e.target.files?.[0];
-                         if (file) {
-                           const url = await handleImageUpload(file);
-                           if (url) {
-                             setEditingProduct(prev => prev ? ({ ...prev, images: [url] }) : null);
-                             const input = document.getElementById('imageUrl') as HTMLInputElement;
-                             if(input) input.value = url;
-                           }
-                         }
-                       }}
-                       className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 dark:file:bg-emerald-900/30 dark:file:text-emerald-400"
-                     />
-                     <input 
-                        id="imageUrl" 
-                        name="images" 
-                        type="hidden" 
-                        defaultValue={editingProduct?.images[0]} 
-                     />
-                     {(editingProduct?.images[0] || (document.getElementById('imageUrl') as HTMLInputElement)?.value) && (
-                       <img 
-                          src={editingProduct?.images[0]} 
-                          className="w-full h-32 object-cover rounded-xl mt-2" 
-                          id="preview-image"
-                       />
-                     )}
+                     <label className="text-[10px] md:text-[11px] font-black text-gray-400 uppercase">صور المنتج</label>
+                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                        {editingProduct.images.length > 0 && editingProduct.images.map((img, idx) => (
+                           <div key={idx} className="relative aspect-square rounded-xl overflow-hidden group border border-gray-200 dark:border-gray-700">
+                             <img src={img} className="w-full h-full object-cover" />
+                             <button
+                                type="button"
+                                onClick={() => setEditingProduct(prev => prev ? ({ ...prev, images: prev.images.filter((_, i) => i !== idx) }) : null)}
+                                className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-all text-xs font-black backdrop-blur-sm"
+                             >
+                                حذف
+                             </button>
+                           </div>
+                        ))}
+                        <label className="aspect-square rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/10 transition-all group">
+                             <svg className="w-6 h-6 text-gray-400 group-hover:text-orange-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>
+                             <span className="text-[9px] font-black uppercase text-gray-400 group-hover:text-orange-500">إضافة</span>
+                             <input
+                               type="file"
+                               accept="image/*"
+                               multiple
+                               className="hidden"
+                               onChange={async (e) => {
+                                 if (e.target.files) {
+                                   const newImages: string[] = [];
+                                   for (let i = 0; i < e.target.files.length; i++) {
+                                      const url = await handleImageUpload(e.target.files[i]);
+                                      if (url) newImages.push(url);
+                                   }
+                                   if (newImages.length > 0) {
+                                     setEditingProduct(prev => prev ? ({ ...prev, images: [...prev.images, ...newImages] }) : null);
+                                   }
+                                 }
+                               }}
+                             />
+                        </label>
+                     </div>
                    </div>
                 </div>
 
-                <div className="flex items-center gap-4 p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl">
+                <div className="flex items-center gap-4 p-4 bg-orange-50 rounded-xl">
                   <input
                     type="checkbox"
                     name="isActive"
                     defaultChecked={editingProduct?.isActive ?? true}
-                    className="w-6 h-6 rounded-lg text-emerald-600 focus:ring-emerald-500 dark:bg-gray-800"
+                    className="w-6 h-6 rounded-lg text-orange-600 focus:ring-orange-500 dark:bg-gray-800"
                   />
-                  <span className="font-black text-emerald-900 dark:text-emerald-400 text-sm">المنتج نشط ومتوافر</span>
+                  <span className="font-black text-orange-900 text-sm">المنتج نشط ومتوافر</span>
                 </div>
               </div>
               <div className="space-y-6">
@@ -540,7 +558,7 @@ const Dashboard: React.FC = () => {
                     type="number"
                     step="0.01"
                     defaultValue={editingProduct?.sellingPricePerItemILS}
-                    className="w-full bg-emerald-50 dark:bg-emerald-900/20 p-4 md:p-5 rounded-xl md:rounded-2xl dark:text-emerald-600 font-black text-xl"
+                    className="w-full bg-orange-50 p-4 md:p-5 rounded-xl md:rounded-2xl text-orange-600 font-black text-xl"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4 md:gap-6">
@@ -573,17 +591,14 @@ const Dashboard: React.FC = () => {
             <div className="p-6 md:p-10 border-t border-gray-50 dark:border-gray-900 flex justify-end gap-4 md:gap-6 bg-gray-50/50 dark:bg-gray-800/20">
               <button
                 type="button"
-                onClick={() => {
-                  setIsAddingProduct(false);
-                  setEditingProduct(null);
-                }}
+                onClick={() => setEditingProduct(null)}
                 className="px-6 md:px-8 py-3 md:py-4 text-gray-400 font-black hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 إلغاء
               </button>
               <button
                 type="submit"
-                className="flex-grow md:flex-none px-10 md:px-16 py-3 md:py-4 bg-gray-900 dark:bg-emerald-600 text-white rounded-xl md:rounded-2xl font-black text-base md:text-lg shadow-xl"
+                className="flex-grow md:flex-none px-10 md:px-16 py-3 md:py-4 bg-orange-500 text-white rounded-xl md:rounded-2xl font-black text-base md:text-lg shadow-xl"
               >
                 حفظ المنتج
               </button>
@@ -619,7 +634,7 @@ const Dashboard: React.FC = () => {
                   name="nameAr"
                   defaultValue={editingCategory?.name.ar}
                   required
-                  className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-xl dark:text-white font-bold outline-none focus:ring-2 ring-emerald-500"
+                  className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-xl dark:text-white font-bold outline-none focus:ring-2 ring-orange-500"
                 />
               </div>
               <div className="space-y-2">
@@ -638,7 +653,7 @@ const Dashboard: React.FC = () => {
                        }
                      }
                    }}
-                   className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 dark:file:bg-emerald-900/30 dark:file:text-emerald-400"
+                   className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 dark:file:bg-orange-900/30 dark:file:text-orange-400"
                  />
                  <input
                   id="catImageUrl"
@@ -667,7 +682,7 @@ const Dashboard: React.FC = () => {
               >
                 إلغاء
               </button>
-              <button type="submit" className="px-8 py-3 bg-gray-900 dark:bg-emerald-600 text-white rounded-xl font-black shadow-lg">
+              <button type="submit" className="px-8 py-3 bg-orange-500 text-white rounded-xl font-black shadow-lg">
                 حفظ
               </button>
             </div>

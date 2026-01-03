@@ -49,17 +49,22 @@ html {
   background: #1e293b;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #cbd5e1;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
 @layer utilities {
   .english-nums {
     font-family: ui-sans-serif, system-ui, sans-serif;
     unicode-bidi: isolate;
   }
+}
+
+::selection {
+  background-color: #fe6601;
+  color: white;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #fe6601;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #ea4e00;
 }

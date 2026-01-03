@@ -43,7 +43,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [categories, setCategories] = useState<Category[]>([]);
   const [settings, setSettings] = useState<AppSettings>({ whatsappNumber: '', currencyLabel: 'ILS', conversionRate: 0.1 });
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>('light');
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [adminToken, setAdminToken] = useState<string | null>(null);
@@ -53,8 +53,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const language: Language = 'ar';
 
   useEffect(() => {
-    const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('pw_theme') : null;
-    if (savedTheme) setTheme(savedTheme as Theme);
+    // Theme persistence disabled or always light
+    // if (savedTheme) setTheme(savedTheme as Theme);
   }, []);
 
   useEffect(() => {
@@ -197,7 +197,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setSettings(saved);
   };
 
-  const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  const toggleTheme = () => {
+    // Theme toggle disabled
+    setTheme('light');
+  };
 
   const addToCart = (productId: string, quantity: number) => {
     setCart((prev) => {

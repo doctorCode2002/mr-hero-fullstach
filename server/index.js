@@ -176,12 +176,20 @@ app.get("/api/health", (req, res) => {
 
 app.get("/api/categories", async (req, res, next) => {
   try {
+    if (!prisma) {
+      throw new Error("Prisma client not initialized in route");
+    }
     const categories = await prisma.category.findMany({
       orderBy: { createdAt: "desc" },
     });
     res.json(categories.map(toCategoryDto));
   } catch (error) {
-    next(error);
+    console.error("Categories route error:", error);
+    res.status(500).json({ 
+      message: "Server error in categories route", 
+      error: error.message,
+      prismaStatus: !!prisma 
+    });
   }
 });
 

@@ -155,23 +155,23 @@ const requireAdmin = (req, res, next) => {
 
 // Upload Endpoint
 app.post('/api/upload', upload.single('image'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
+  try {
+    console.log('Upload request received');
+    if (!req.file) {
+      console.error('No file in request');
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    console.log('File uploaded successfully:', req.file.path);
+    // Cloudinary storage provides the URL in req.file.path
+    res.json({ url: req.file.path });
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ error: 'Upload failed', details: error.message });
   }
-  // Cloudinary storage provides the URL in req.file.path
-  res.json({ url: req.file.path });
 });
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
-});
-
-app.post("/api/auth/login", (req, res) => {
-  const { password } = req.body;
-  if (password === ADMIN_PASSWORD) {
-    return res.json({ token: ADMIN_TOKEN });
-  }
-  return res.status(401).json({ message: "Invalid password" });
 });
 
 app.get("/api/categories", async (req, res, next) => {

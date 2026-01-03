@@ -311,7 +311,11 @@ app.get(/.*/, (req, res) => {
 
 app.use((err, req, res, _next) => {
   console.error(err);
-  res.status(500).json({ message: "Server error" });
+  res.status(500).json({ 
+    message: "Server error", 
+    error: err.message,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack 
+  });
 });
 
 export { app };

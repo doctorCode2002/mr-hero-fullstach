@@ -45,7 +45,16 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick }) => {
               الرئيسية
             </a>
             <a
-              onClick={() => navigate('/category/all')}
+              onClick={() => {
+                if (window.location.pathname !== '/') {
+                   navigate('/');
+                   setTimeout(() => {
+                     document.getElementById('categories-grid')?.scrollIntoView({ behavior: 'smooth' });
+                   }, 100);
+                } else {
+                   document.getElementById('categories-grid')?.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
               className="text-gray-600 hover:text-orange-500 font-medium px-3 py-2 rounded-md transition-colors cursor-pointer"
             >
               الأصناف
@@ -108,7 +117,17 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick }) => {
                 الرئيسية
               </a>
               <a
-                onClick={() => { navigate('/category/all'); setMobileMenuOpen(false); }}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (window.location.pathname !== '/') {
+                     navigate('/');
+                     setTimeout(() => {
+                       document.getElementById('categories-grid')?.scrollIntoView({ behavior: 'smooth' });
+                     }, 100);
+                  } else {
+                     document.getElementById('categories-grid')?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
                 className="block text-gray-600 hover:text-orange-500 font-bold py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 الأصناف

@@ -68,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick }) => {
               onClick={onCartClick}
               className="p-2 cursor-pointer text-gray-500 hover:text-orange-500 transition-colors relative"
             >
-              <HiOutlineShoppingCart className="text-2xl" />
+              <span className="text-2xl"><HiOutlineShoppingCart /></span>
               {hasItems && (
                 <span className="absolute top-2 left-2 bg-red-500 w-2.5 h-2.5 rounded-full border-2 border-white"></span>
               )}
@@ -77,13 +77,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick }) => {
               onClick={() => setSearchOpen(true)}
               className="md:hidden cursor-pointer p-2 text-gray-500 hover:text-orange-500 transition-colors"
             >
-              <HiOutlineSearch className="text-2xl" />
+              <span className="text-2xl"><HiOutlineSearch /></span>
             </button>
             <button 
               onClick={() => setMobileMenuOpen(true)}
               className="md:hidden p-2 cursor-pointer text-gray-500 hover:text-orange-500 transition-colors"
             >
-              <HiMenuAlt3 className="text-2xl" />
+              <span className="text-2xl"><HiMenuAlt3 /></span>
             </button>
           </div>
         </div>
@@ -97,7 +97,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick }) => {
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-black text-gray-900">القائمة</h2>
               <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-full">
-                <HiOutlineX className="text-2xl" />
+                <span className="text-2xl"><HiOutlineX /></span>
               </button>
             </div>
             <nav className="space-y-4">
@@ -138,12 +138,12 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick }) => {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-black text-gray-900">البحث</h2>
               <button onClick={() => setSearchOpen(false)} className="p-2 hover:bg-gray-100 rounded-full">
-                <HiOutlineX className="text-xl" />
+                <span className="text-xl"><HiOutlineX /></span>
               </button>
             </div>
             <form onSubmit={handleSearch}>
               <div className="relative">
-                <HiOutlineSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-orange-500 text-xl" />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-orange-500 text-xl"><HiOutlineSearch /></span>
                 <input
                   type="text"
                   placeholder="ابحث عن منتج..."

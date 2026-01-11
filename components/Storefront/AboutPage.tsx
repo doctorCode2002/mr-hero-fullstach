@@ -1,4 +1,5 @@
 import React from 'react';
+import { HiBadgeCheck, HiTruck, HiChatAlt2 } from 'react-icons/hi';
 
 const AboutPage: React.FC = () => {
   return (
@@ -30,7 +31,7 @@ const AboutPage: React.FC = () => {
             <div className="space-y-4">
               <div className="flex gap-4">
                 <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
-                  <span className="material-icons text-orange-500 text-2xl">verified</span>
+                  <span className="text-orange-500 text-2xl"><HiBadgeCheck /></span>
                 </div>
                 <div>
                   <h3 className="font-bold text-xl text-gray-900 mb-1">جودة مضمونة</h3>
@@ -39,7 +40,7 @@ const AboutPage: React.FC = () => {
               </div>
               <div className="flex gap-4">
                 <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
-                  <span className="material-icons text-orange-500 text-2xl">local_shipping</span>
+                  <span className="text-orange-500 text-2xl"><HiTruck /></span>
                 </div>
                 <div>
                   <h3 className="font-bold text-xl text-gray-900 mb-1">شحن سريع</h3>
@@ -48,7 +49,7 @@ const AboutPage: React.FC = () => {
               </div>
               <div className="flex gap-4">
                 <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
-                  <span className="material-icons text-orange-500 text-2xl">support_agent</span>
+                  <span className="text-orange-500 text-2xl"><HiChatAlt2 /></span>
                 </div>
                 <div>
                   <h3 className="font-bold text-xl text-gray-900 mb-1">دعم متواصل</h3>

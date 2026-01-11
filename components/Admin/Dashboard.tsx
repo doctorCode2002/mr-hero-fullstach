@@ -5,6 +5,12 @@ import { calculateProductPricing, formatCurrency } from '../../utils/calculation
 import FormattedPrice from '../Shared/FormattedPrice';
 import { useNavigate } from 'react-router-dom';
 import { uploadToCloudinary } from '../../utils/upload';
+import { 
+  MdAdminPanelSettings, MdLogout, MdInventory2, MdCategory, MdSettings, 
+  MdSearch, MdAdd, MdEdit, MdDelete, MdUploadFile, MdChat, MdLock, 
+  MdInfo, MdSave, MdDeleteForever, MdDangerous, MdTipsAndUpdates, 
+  MdAddPhotoAlternate, MdClose, MdTune, MdNotifications, MdHelp 
+} from 'react-icons/md';
 
 const Dashboard: React.FC = () => {
     const { 
@@ -228,16 +234,16 @@ const Dashboard: React.FC = () => {
                 <div className="max-w-7xl mx-auto px-4 lg:px-8 h-20 flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-orange-500/30">
-                            <span className="material-icons">admin_panel_settings</span>
+                            <span className="text-2xl"><MdAdminPanelSettings /></span>
                         </div>
                         <h1 className="text-xl font-black text-gray-900 hidden md:block">لوحة التحكم</h1>
                     </div>
                     
                     <div className="flex bg-gray-100 p-1 rounded-xl">
                         {[
-                            { id: 'inventory', label: 'المخزون', icon: 'inventory_2' },
-                            { id: 'categories', label: 'التصنيفات', icon: 'category' },
-                            { id: 'business', label: 'الإعدادات', icon: 'settings' },
+                            { id: 'inventory', label: 'المخزون', icon: <MdInventory2 /> },
+                            { id: 'categories', label: 'التصنيفات', icon: <MdCategory /> },
+                            { id: 'business', label: 'الإعدادات', icon: <MdSettings /> },
                         ].map(tab => (
                             <button
                                 key={tab.id}
@@ -248,7 +254,7 @@ const Dashboard: React.FC = () => {
                                     : 'text-gray-500 hover:text-gray-900'
                                 }`}
                             >
-                                <span className="material-icons text-base">{tab.icon}</span>
+                                <span className="text-base">{tab.icon}</span>
                                 <span className="hidden md:inline">{tab.label}</span>
                             </button>
                         ))}
@@ -256,7 +262,7 @@ const Dashboard: React.FC = () => {
 
                     <div className="flex items-center gap-3">
                         <button onClick={() => logoutAdmin()} className="p-2 text-gray-400 hover:text-red-500 transition-colors" title="تسجيل الخروج">
-                            <span className="material-icons">logout</span>
+                            <span className="text-2xl"><MdLogout /></span>
                         </button>
                     </div>
                 </div>
@@ -270,7 +276,7 @@ const Dashboard: React.FC = () => {
                             <div className="bg-white p-8 rounded-[2.5rem] border-2 border-orange-50 shadow-xl shadow-orange-500/5 transition-all hover:scale-[1.02]">
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="w-14 h-14 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center">
-                                        <span className="material-icons text-3xl">category</span>
+                                        <span className="text-3xl"><MdCategory /></span>
                                     </div>
                                     <div className="flex flex-col items-end">
                                         <span className="text-xs font-black text-orange-500 bg-orange-50 px-3 py-1 rounded-full">نشط الآن</span>
@@ -283,7 +289,7 @@ const Dashboard: React.FC = () => {
                             <div className="bg-white p-8 rounded-[2.5rem] border-2 border-blue-50 shadow-xl shadow-blue-500/5 transition-all hover:scale-[1.02]">
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
-                                        <span className="material-icons text-3xl">inventory_2</span>
+                                        <span className="text-3xl"><MdInventory2 /></span>
                                     </div>
                                     <div className="flex flex-col items-end">
                                         <span className="text-xs font-black text-blue-500 bg-blue-50 px-3 py-1 rounded-full">متاح للبيع</span>
@@ -297,7 +303,7 @@ const Dashboard: React.FC = () => {
                         {/* Controls */}
                         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                             <div className="relative w-full md:w-96 group">
-                                <span className="material-icons absolute right-4 top-3.5 text-gray-400 group-focus-within:text-orange-500 transition-colors">search</span>
+                                <span className="absolute right-4 top-3.5 text-gray-400 group-focus-within:text-orange-500 transition-colors text-xl"><MdSearch /></span>
                                 <input 
                                     type="text" 
                                     placeholder="بحث في المخزون..." 
@@ -310,7 +316,7 @@ const Dashboard: React.FC = () => {
                                 onClick={() => { setEditingProduct(null); resetForm(); setIsAddingProduct(true); }}
                                 className="w-full cursor-pointer md:w-auto bg-gray-900 text-white px-6 py-3 rounded-2xl font-black hover:bg-orange-600 hover:text-white transition-all flex items-center justify-center gap-2"
                             >
-                                <span className="material-icons">add</span>
+                                <span className="text-xl"><MdAdd /></span>
                                 <span>إضافة منتج</span>
                             </button>
                         </div>
@@ -365,10 +371,10 @@ const Dashboard: React.FC = () => {
                                             <td className="p-6">
                                                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <button onClick={() => openEdit(product)} className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
-                                                        <span className="material-icons text-sm">edit</span>
+                                                        <span className="text-sm"><MdEdit /></span>
                                                     </button>
                                                     <button onClick={() => deleteProduct(product.id)} className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors">
-                                                        <span className="material-icons text-sm">delete</span>
+                                                        <span className="text-sm"><MdDelete /></span>
                                                     </button>
                                                 </div>
                                             </td>
@@ -393,17 +399,17 @@ const Dashboard: React.FC = () => {
                             </div>
                             <div className="flex gap-3">
                                 <button className="flex items-center justify-center w-10 h-10 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-orange-500 transition-colors">
-                                    <span className="material-icons text-xl">notifications</span>
+                                    <span className="text-xl"><MdNotifications /></span>
                                 </button>
                                 <button className="flex items-center justify-center w-10 h-10 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-orange-500 transition-colors">
-                                    <span className="material-icons text-xl">help</span>
+                                    <span className="text-xl"><MdHelp /></span>
                                 </button>
                             </div>
                         </header>
 
                         <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                             <div className="border-b border-gray-100 bg-gray-50/50 px-6 py-4 flex items-center gap-2">
-                                <span className="material-icons text-orange-500 text-xl">tune</span>
+                                <span className="text-orange-500 text-xl"><MdTune /></span>
                                 <h3 className="font-bold text-gray-800 text-sm">المتغيرات العامة</h3>
                             </div>
                             
@@ -428,7 +434,7 @@ const Dashboard: React.FC = () => {
                                                 onChange={(e) => setBusinessSettings({ ...businessSettings, whatsappNumber: e.target.value.replace(/[^\d+]/g, '') })}
                                             />
                                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <span className="material-icons text-gray-400 text-lg">chat</span>
+                                                <span className="text-gray-400 text-lg"><MdChat /></span>
                                             </div>
                                         </div>
                                     </div>
@@ -453,14 +459,14 @@ const Dashboard: React.FC = () => {
                                                         value="USD ($)"
                                                     />
                                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                        <span className="material-icons text-gray-400 text-lg">lock</span>
+                                                        <span className="text-gray-400 text-lg"><MdLock /></span>
                                                     </div>
                                                 </div>
                                             </div>
                                             {/* Highlighted Conversion Rate */}
                                             <div className="group">
                                                 <label className=" text-sm font-bold text-orange-500 mb-2 flex items-center gap-1">
-                                                    {/* <span className="material-icons text-xs">conversion_path</span> */}
+                                                    {/* <span className="text-xs">conversion_path</span> */}
                                                     سعر صرف الدولار (USD → EGP)
                                                 </label>
                                                 <div className="relative">
@@ -472,7 +478,7 @@ const Dashboard: React.FC = () => {
                                                         onChange={(e) => setBusinessSettings({ ...businessSettings, conversionRate: parseFloat(e.target.value) || 0 })}
                                                     />
                                                     {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                        <span className="material-icons text-orange-500/60 text-lg">currency_exchange</span>
+                                                        <span className="text-orange-500/60 text-lg">currency_exchange</span>
                                                     </div> */}
                                                 </div>
                                             </div>
@@ -508,7 +514,7 @@ const Dashboard: React.FC = () => {
                                         </div>
                                         {/* Warning Note */}
                                         <div className="rounded-lg bg-orange-50 border border-orange-100 p-4 flex gap-3 items-start">
-                                            <span className="material-icons text-orange-500 mt-0.5 shrink-0">info</span>
+                                            <span className="text-orange-500 mt-0.5 shrink-0"><MdInfo /></span>
                                             <div className="text-sm text-orange-900/80 leading-relaxed">
                                                 <span className="font-bold text-orange-800">تنبيه هام:</span> 
                                                 تحديث سعر التحويل سيؤدي تلقائياً إلى إعادة حساب هوامش الربح وأسعار البيع المقترحة لجميع المنصات (Pallets) الموجودة حالياً في المخزون. يرجى التحقق قبل الحفظ.
@@ -531,7 +537,7 @@ const Dashboard: React.FC = () => {
                                         onClick={handleSaveSettings}
                                         className="px-6 py-2.5 rounded-lg bg-orange-500 text-white font-bold text-sm shadow-md shadow-orange-500/20 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all flex items-center gap-2"
                                     >
-                                        <span className="material-icons text-[18px]">save</span>
+                                        <span className="text-[18px]"><MdSave /></span>
                                         حفظ التغييرات
                                     </button>
                                 </div>
@@ -539,7 +545,7 @@ const Dashboard: React.FC = () => {
                                 {/* Reset Data Section */}
                                 <div className="mt-12 pt-8 border-t border-red-100">
                                     <h3 className="text-lg font-black text-red-600 mb-2 flex items-center gap-2">
-                                        <span className="material-icons">dangerous</span>
+                                        <span className=""><MdDangerous /></span>
                                         منطقة الخطر
                                     </h3>
                                     <p className="text-sm text-gray-500 mb-6 font-medium">مسح جميع البيانات المخزنة محلياً وإعادة ضبط المتجر للحالة الأصلية.</p>
@@ -547,7 +553,7 @@ const Dashboard: React.FC = () => {
                                         onClick={handleResetAllData}
                                         className="px-6 py-3 rounded-xl bg-red-50 text-red-600 border border-red-200 font-bold text-sm hover:bg-red-600 hover:text-white transition-all flex items-center gap-2"
                                     >
-                                        <span className="material-icons text-[18px]">delete_forever</span>
+                                        <span className="text-[18px]"><MdDeleteForever /></span>
                                         مسح جميع البيانات (Reset)
                                     </button>
                                 </div>
@@ -568,7 +574,7 @@ const Dashboard: React.FC = () => {
                         {/* Controls */}
                         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                             <div className="relative w-full md:w-96 group">
-                                <span className="material-icons absolute right-4 top-3.5 text-gray-400 group-focus-within:text-orange-500 transition-colors">search</span>
+                                <span className="absolute right-4 top-3.5 text-gray-400 group-focus-within:text-orange-500 transition-colors text-xl"><MdSearch /></span>
                                 <input 
                                     type="text" 
                                     placeholder="بحث في التصنيفات..." 
@@ -581,7 +587,7 @@ const Dashboard: React.FC = () => {
                                 onClick={() => { setEditingCategory(null); setCatForm({ nameAr: '', nameEn: '', image: '' }); setIsAddingCategory(true); }}
                                 className="w-full md:w-auto cursor-pointer bg-gray-900 text-white px-6 py-3 rounded-2xl font-black hover:bg-orange-600 hover:text-white transition-all flex items-center justify-center gap-2"
                             >
-                                <span className="material-icons">add</span>
+                                <span className="text-xl"><MdAdd /></span>
                                 <span>إضافة تصنيف</span>
                             </button>
                         </div>
@@ -595,10 +601,10 @@ const Dashboard: React.FC = () => {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-6">
                                             <div className="flex gap-2">
                                                 <button onClick={() => openEditCategory(category)} className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-orange-600 transition-all">
-                                                    <span className="material-icons">edit</span>
+                                                    <span className="text-lg"><MdEdit /></span>
                                                 </button>
                                                 <button onClick={() => deleteCategory(category.id)} className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
-                                                    <span className="material-icons">delete</span>
+                                                    <span className="text-lg"><MdDelete /></span>
                                                 </button>
                                             </div>
                                         </div>
@@ -628,7 +634,7 @@ const Dashboard: React.FC = () => {
                                 <p className="text-sm text-gray-400 font-bold mt-1">أدخل تفاصيل المنتج بدقة لضمان عرض صحيح</p>
                             </div>
                             <button onClick={() => setIsAddingProduct(false)} className="w-10 h-10 rounded-xl bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-500 transition-colors flex items-center justify-center">
-                                <span className="material-icons">close</span>
+                                <span className="text-lg"><MdClose /></span>
                             </button>
                         </div>
                         
@@ -646,12 +652,12 @@ const Dashboard: React.FC = () => {
                                                         onClick={() => setProdForm({ ...prodForm, images: prodForm.images.slice(1) })}
                                                         className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                                                     >
-                                                        <span className="material-icons text-xs">delete</span>
+                                                        <span className="text-xs"><MdDelete /></span>
                                                     </button>
                                                 </div>
                                             ) : (
                                                 <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
-                                                    <span className="material-icons text-4xl mb-2">add_photo_alternate</span>
+                                                    <span className="text-4xl mb-2"><MdAddPhotoAlternate /></span>
                                                     <span className="text-xs font-bold">صورة رئيسية</span>
                                                 </div>
                                             )}
@@ -677,7 +683,7 @@ const Dashboard: React.FC = () => {
                                                     htmlFor="prod-image-upload"
                                                     className="flex items-center justify-center gap-2 w-full py-3 bg-orange-100 text-orange-700 rounded-xl text-xs font-black cursor-pointer hover:bg-orange-200 transition-all border-2 border-dashed border-orange-300"
                                                 >
-                                                    <span className="material-icons text-sm">upload_file</span>
+                                                    <span className="text-sm"><MdUploadFile /></span>
                                                     رفع من الجهاز
                                                 </label>
                                             </div>
@@ -700,7 +706,7 @@ const Dashboard: React.FC = () => {
                                                     onClick={handleAddImage}
                                                     className="bg-gray-900 text-white px-3 rounded-xl hover:bg-orange-600 transition-colors"
                                                 >
-                                                    <span className="material-icons text-sm">add</span>
+                                                    <span className="text-sm"><MdAdd /></span>
                                                 </button>
                                             </div>
                                         </div>
@@ -708,7 +714,7 @@ const Dashboard: React.FC = () => {
                                     
                                     <div className="bg-orange-50 rounded-2xl p-6 border border-orange-100">
                                         <h4 className="font-bold text-orange-900 mb-4 flex items-center gap-2">
-                                            <span className="material-icons text-sm">tips_and_updates</span>
+                                            <span className="text-sm"><MdTipsAndUpdates /></span>
                                             نصائح
                                         </h4>
                                         <ul className="text-xs text-orange-800/80 space-y-2 list-disc list-inside font-medium leading-relaxed">
@@ -791,7 +797,7 @@ const Dashboard: React.FC = () => {
                         {/* Modal Footer */}
                         <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex gap-4">
                             <button onClick={handleSaveProduct} className="flex-1 bg-gray-900 text-white py-4 rounded-xl font-black text-lg hover:bg-orange-600 hover:text-white transition-all shadow-xl shadow-gray-200 hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2">
-                                <span className="material-icons">save</span>
+                                <span className="text-2xl"><MdSave /></span>
                                 <span>حفظ التغييرات</span>
                             </button>
                             <button onClick={() => setIsAddingProduct(false)} className="px-8 py-4 bg-white text-gray-900 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition-all">

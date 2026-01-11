@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStore } from '../../store/StoreContext';
+import { HiCheckCircle, HiExclamationCircle, HiInformationCircle, HiX } from 'react-icons/hi';
 
 const NotificationManager: React.FC = () => {
   const { notifications, removeNotification } = useStore();
@@ -16,15 +17,17 @@ const NotificationManager: React.FC = () => {
             ${n.type === 'info' ? 'bg-blue-600 border-blue-500 text-white' : ''}
           `}
         >
-          <span className="material-icons text-xl">
-            {n.type === 'success' ? 'check_circle' : n.type === 'error' ? 'error' : 'info'}
+          <span className="text-xl">
+            {n.type === 'success' && <HiCheckCircle />}
+            {n.type === 'error' && <HiExclamationCircle />}
+            {n.type === 'info' && <HiInformationCircle />}
           </span>
           <p className="font-bold flex-1">{n.message}</p>
           <button
             onClick={() => removeNotification(n.id)}
             className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
           >
-            <span className="material-icons text-sm">close</span>
+            <span className="text-xl"><HiX /></span>
           </button>
         </div>
       ))}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../../store/StoreContext';
 import { useNavigate } from 'react-router-dom';
+import { HiEye, HiEyeOff, HiExclamationCircle } from 'react-icons/hi';
 
 const AdminLogin: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -69,12 +70,12 @@ const AdminLogin: React.FC = () => {
                 className=" absolute left-4 top-1/2 -translate-y-[calc(50%-6px)] text-gray-400 hover:text-orange-600 transition-colors flex items-center justify-center"
                 tabIndex={-1}
               >
-                <span className="material-icons">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                  <span className="text-xl">{showPassword ? <HiEyeOff /> : <HiEye />}</span>
               </button>
             </div>
             {error && (
               <p className="text-red-500 text-sm font-bold flex items-center gap-1 animate-in slide-in-from-top-1">
-                <span className="material-icons text-base">error</span>
+                <span className="text-base"><HiExclamationCircle /></span>
                 كلمة المرور غير صحيحة
               </p>
             )}

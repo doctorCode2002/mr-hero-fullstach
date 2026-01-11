@@ -1,4 +1,6 @@
 import React from 'react';
+import { HiMail, HiPhone, HiAtSymbol } from 'react-icons/hi';
+import { FaFacebook, FaInstagram } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
   return (
@@ -68,11 +70,11 @@ const Footer: React.FC = () => {
             <h4 className="text-white font-bold mb-4">تواصل معنا</h4>
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
-                <span className="material-icons text-xs">email</span>
+                <span className="text-xl"><HiMail /></span>
                 <span>info@mrhero.com</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="material-icons text-xs">phone</span>
+                <span className="text-xl"><HiPhone /></span>
                 <span>+966 50 123 4567</span>
               </li>
             </ul>
@@ -82,13 +84,13 @@ const Footer: React.FC = () => {
           <p>© 2023 مستر هيرو. جميع الحقوق محفوظة.</p>
           <div className="flex space-x-4 space-x-reverse mt-4 md:mt-0">
             <a className="hover:text-white" href="#">
-              <i className="material-icons text-lg">facebook</i>
+              <span className="text-lg"><FaFacebook /></span>
             </a>
             <a className="hover:text-white" href="#">
-              <i className="material-icons text-lg">camera_alt</i>
+              <span className="text-lg"><FaInstagram /></span>
             </a>
             <a className="hover:text-white" href="#">
-              <i className="material-icons text-lg">alternate_email</i>
+              <span className="text-lg"><HiAtSymbol /></span>
             </a>
           </div>
         </div>

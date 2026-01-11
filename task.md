@@ -1,0 +1,32 @@
+# Task Checklist
+
+- [ ] Planning
+    - [x] Explore current project structure <!-- id: 0 -->
+    - [ ] Create Implementation Plan <!-- id: 1 -->
+- [ ] Setup & Global Config
+    - [x] Update `index.html` with Fonts & Icons <!-- id: 2 -->
+    - [x] Update `tailwind.config.js` (Theme, Colors, Fonts) <!-- id: 3 -->
+    - [x] Update `index.css` (Base styles) <!-- id: 4 -->
+- [ ] Migrate Components/Pages
+    - [x] Update `HomePage.tsx` (Hero, Categories, etc.) <!-- id: 5 -->
+    - [x] Update `CategoryPage.tsx` <!-- id: 6 -->
+    - [/] Update `Cart.tsx` <!-- id: 7 -->
+    - [x] Create/Update `WhatsAppCheckout.tsx` (Confirmation page) <!-- id: 8 -->
+    - [x] Update `ProductPage.tsx` <!-- id: 9 -->
+    - [/] Update `AdminLogin.tsx` <!-- id: 10 -->
+    - [x] Update `Dashboard.tsx` (Inventory/Categories/Settings) <!-- id: 11 -->
+- [x] Verification
+    - [x] Verify routes and navigation <!-- id: 12 -->
+    - [x] Verify UI responsiveness <!-- id: 13 -->
+    - [ ] Verify interactions (Add to cart, Login) <!-- id: 14 -->
+- [x] Backend & Auth Migration
+    - [x] Disconnect legacy backend (API calls) <!-- id: 15 -->
+    - [x] Remove Admin icon from Navbar <!-- id: 16 -->
+    - [x] Update Admin credentials to use .env (Username/Password) <!-- id: 17 -->
+- [ ] UI & Navigation Updates
+    - [ ] Navbar: Scroll to top on Logo/Home click <!-- id: 19 -->
+    - [ ] Create 'About Us' page and link in Navbar <!-- id: 20 -->
+    - [ ] Admin Login: UI Tweaks (Shield rotation, Button color, Centering) <!-- id: 21 -->
+    - [ ] Admin Dashboard: Update Settings tab with new design <!-- id: 22 -->
+    - [ ] Admin Dashboard: Clarify/Update Add Category & Item forms <!-- id: 23 -->
+    - [ ] Connect to Supabase (Future) <!-- id: 18 -->

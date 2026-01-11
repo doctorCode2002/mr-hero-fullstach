@@ -11,29 +11,38 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#fe6601',
-          50: '#fff0e0',  // Richer light orange (Material 50-ish)
-          100: '#ffe0b2', // More visible peach
-          200: '#ffcc80',
-          300: '#ffb74d',
-          400: '#ffa726',
-          500: '#fe6601', // Our primary brand color (kept)
-          600: '#f55a00',
-          700: '#e64a19',
-          800: '#d84315',
-          900: '#bf360c',
-          950: '#431202',
+          DEFAULT: "var(--primary)", // Orange (exact spec)
+          hover: "var(--primary-hover)", // Darker orange for hover
+          50: '#fff7ed',
+          100: '#ffedd5',
+          200: '#fed7aa',
+          300: '#fdba74',
+          400: '#fb923c',
+          500: '#fe6601',
+          600: '#e55a00',
+          700: '#c2410c',
+          800: '#9a3412',
+          900: '#7c2d12',
+          950: '#431407',
         },
-        // Mapping emerald to primary/gray for backward compatibility if needed, 
-        // or we just replace usage in code.
-        // Let's replace usage in code, but keep this handy.
+        "background-light": "#F9FAFB", // Gray-50
+        "background-dark": "#111827", // Gray-900
+        "surface-light": "#FFFFFF",
+        "surface-dark": "#1F2937",
+        "text-light": "#1F2937", // Gray-800
+        "text-dark": "#F3F4F6", // Gray-100
+        "border-light": "#E5E7EB", // Gray-200
+        "border-dark": "#374151", // Gray-700
       },
       fontFamily: {
-        cairo: ['Cairo', 'sans-serif'],
+        display: ["Tajawal", "sans-serif"],
+        body: ["Tajawal", "sans-serif"],
+        sans: ["Tajawal", "sans-serif"],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-in': 'slideIn 0.5s ease-out',
+        'bounce': 'bounce 3s infinite',
       },
       keyframes: {
         fadeIn: {
@@ -47,6 +56,5 @@ export default {
       },
     },
   },
-  darkMode: 'class', // We will just not toggle this class on body
   plugins: [],
 }

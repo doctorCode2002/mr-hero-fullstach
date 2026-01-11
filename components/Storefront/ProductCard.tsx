@@ -6,6 +6,8 @@ import { Product } from '../../types';
 import { useStore } from '../../store/StoreContext';
 import { calculateProductPricing } from '../../utils/calculations';
 import FormattedPrice from '../Shared/FormattedPrice';
+import { HiOutlineCheckCircle, HiOutlineShoppingCart } from 'react-icons/hi';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   product: Product;
@@ -14,14 +16,21 @@ interface Props {
 
 const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
   const { language, addToCart, settings } = useStore();
+  const navigate = useNavigate();
   const pricing = calculateProductPricing(product, settings.conversionRate);
   const [isAdded, setIsAdded] = React.useState(false);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    addToCart(product.id, 1);
+    e.preventDefault();
+    // Add a full pallet worth of items by default
+    addToCart(product.id, product.itemsPerPallet);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1500);
+  };
+
+  const handleNavigate = () => {
+    navigate(`/product/${product.id}`);
   };
 
   const t = {
@@ -33,74 +42,76 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl border-2 border-orange-50 dark:border-gray-800 overflow-hidden hover:border-orange-500 transition-all group flex flex-col text-sm duration-300">
-      <div className="aspect-square bg-orange-50/30 dark:bg-gray-800/50 overflow-hidden relative">
+    <div className="bg-white rounded-2xl border-2 border-gray-100 overflow-hidden hover:border-orange-500 hover:shadow-xl transition-all group flex flex-col text-sm duration-300">
+      {/* Clickable Image */}
+      <div 
+        onClick={handleNavigate}
+        className="aspect-square bg-gray-50 overflow-hidden relative cursor-pointer"
+      >
         <img 
           src={product.images[0]} 
-          alt={product.name[language]} 
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          alt={product.name} 
+          className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
         />
-        <div className="absolute top-3 right-3 bg-orange-500 text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border-2 border-white">
-          ربح {pricing.profitMarginPercent.toFixed(1)}%
+        <div className="absolute top-3 right-3 bg-green-500/90 backdrop-blur-sm text-white px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-lg">
+          ربح {pricing.profitMarginPercent.toFixed(0)}٪
         </div>
       </div>
 
-      <div className="p-5 md:p-6 flex flex-col flex-grow">
-        <h3 className="font-black text-gray-900 dark:text-white text-base md:text-lg mb-1 truncate">
-          {product.name[language]}
+      <div className="p-4 md:p-5 flex flex-col grow">
+        {/* Clickable Title */}
+        <h3 
+          onClick={handleNavigate}
+          className="font-black text-gray-900 text-sm md:text-base mb-1 line-clamp-2 cursor-pointer hover:text-orange-500 transition-colors"
+        >
+          {product.name}
         </h3>
-        <p className="text-gray-400 dark:text-gray-500 text-xs md:text-sm font-bold mb-4">
-          {product.itemsPerPallet} {t.items} {t.perPallet}
+        <p className="text-gray-400 text-xs font-bold mb-3">
+          {product.itemsPerPallet} {t.items}
         </p>
 
-        <div className="mt-auto space-y-4">
-          <div className="flex justify-between items-end">
-            <div>
-              <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest mb-1">{t.perItem}</p>
+        <div className="mt-auto space-y-3">
+          {/* Price Highlight */}
+          <div className="bg-linear-to-br from-orange-500/5 to-orange-50 p-3 rounded-xl border border-orange-500/20">
+            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">سعر القطعة (جملة)</p>
+            <FormattedPrice 
+              amount={product.baseCostEGP} 
+              currency="EGP" 
+              className="text-xl md:text-2xl font-black text-orange-500" 
+            />
+            <div className="flex justify-between items-center mt-1">
+              <span className="text-[9px] text-gray-400">ربح متوقع (للطبلية):</span>
               <FormattedPrice 
-                amount={pricing.wholesalePricePerItemILS} 
-                currency="ILS" 
-                className="text-sm text-gray-700 dark:text-gray-300"
+                amount={pricing.profitPerPalletUSD} 
+                currency="USD" 
+                className="font-bold text-green-600 text-xs" 
               />
-            </div>
-            <div className="text-right">
-              <p className="text-[10px] text-orange-600 font-black uppercase tracking-widest mb-1">{t.perPallet}</p>
-              <div className="flex flex-col items-end">
-                <FormattedPrice 
-                  amount={pricing.wholesalePricePerPalletILS} 
-                  currency="ILS" 
-                  className="text-2xl font-black text-gray-900 dark:text-white"
-                />
-                <p className="text-[9px] text-gray-500 dark:text-gray-400 font-bold mt-1">شامل التوصيل</p>
-              </div>
             </div>
           </div>
 
-          <div className="flex gap-3">
+          {/* Action Buttons */}
+          <div className="flex gap-2">
             <button 
-              onClick={() => onViewDetails(product)}
-              className="flex-1 text-[11px] md:text-xs font-black py-3 px-4 border-2 border-orange-100 rounded-xl hover:bg-orange-500 hover:text-white hover:border-orange-500 text-orange-700 transition-all uppercase tracking-widest"
+              onClick={(e) => { e.stopPropagation(); handleNavigate(); }}
+              className="flex-1 cursor-pointer text-[10px] md:text-xs font-black py-2.5 px-3 border-2 border-orange-500/20 rounded-xl hover:bg-orange-500 hover:text-white hover:border-orange-500 text-orange-500 transition-all uppercase tracking-wider"
             >
               التفاصيل
             </button>
             <button 
               onClick={handleAddToCart}
-              className={`text-white p-3 rounded-xl transition-all shadow-md active:scale-95 ${
+              className={`flex-1 py-2.5 px-3 rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5 text-[10px] md:text-xs font-bold ${
                 isAdded 
-                ? 'bg-gray-900 text-orange-500 scale-110' 
-                : 'bg-orange-600 hover:bg-orange-700'
+                ? 'bg-green-500 text-white shadow-green-500/20' 
+                : 'bg-orange-500 text-white hover:bg-primary-hover shadow-orange-500/20'
               }`}
               title={t.addPallet}
             >
               {isAdded ? (
-                <svg className="w-5 h-5 md:w-6 md:h-6 animate-in zoom-in spin-in-180 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                </svg>
+                <span className="text-base"><HiOutlineCheckCircle /></span>
               ) : (
-                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
-                </svg>
+                <span className="text-base"><HiOutlineShoppingCart /></span>
               )}
+              <span className="hidden sm:inline ">{isAdded ? 'تمت' : 'إضافة'}</span>
             </button>
           </div>
         </div>

@@ -16,8 +16,7 @@ datasource db {
 
 model Category {
   id        String    @id @default(cuid())
-  nameEn    String
-  nameAr    String
+  name      String
   image     String
   products  Product[]
   createdAt DateTime  @default(now())
@@ -26,28 +25,27 @@ model Category {
 
 model Product {
   id                     String   @id @default(cuid())
+  product_id             String   @unique @default(cuid())
   categoryId             String
   category               Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  nameEn                 String
-  nameAr                 String
-  descriptionEn          String
-  descriptionAr          String
+  name                   String
+  description            String
   imagesRaw              String
   itemsPerPallet         Int
   baseCostEGP            Float
-  conversionRate         Float
-  deliveryCostPerItemILS Float
-  sellingPricePerItemILS Float
+  sellingPricePerItemUSD Float
   isActive               Boolean  @default(true)
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
 }
 
 model AppSettings {
-  id             Int      @id @default(1)
-  whatsappNumber String
-  currencyLabel  String
-  conversionRate Float    @default(0.1)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                        Int      @id @default(1)
+  whatsappNumber            String
+  currencyLabel             String
+  conversionRate            Float    @default(47.0)
+  deliveryCostPerPalletUSD  Float    @default(2200.0)
+  halfPalletDeliveryCostUSD Float    @default(1200.0)
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
 }

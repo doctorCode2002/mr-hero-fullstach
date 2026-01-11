@@ -1,10 +1,15 @@
 @import 'tailwindcss';
 
-@import '@fontsource/cairo';
-@import '@fontsource/inter';
-@import '@fontsource/manrope';
-@import '@fontsource/noto-sans-arabic';
-@import '@fontsource/tajawal';
+@import '@fontsource/tajawal/400.css';
+@import '@fontsource/tajawal/500.css';
+@import '@fontsource/tajawal/700.css';
+@import '@fontsource/tajawal/800.css';
+@import '@fontsource/tajawal/900.css';
+@import '@fontsource/manrope/400.css';
+@import '@fontsource/manrope/700.css';
+@import '@fontsource/noto-sans-arabic/400.css';
+@import '@fontsource/noto-sans-arabic/700.css';
+
 @import 'material-icons/iconfont/material-icons.css';
 @import 'material-symbols';
 

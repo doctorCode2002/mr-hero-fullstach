@@ -81,7 +81,7 @@ const OrderConfirmation: React.FC = () => {
                     <div className="bg-green-600 p-8 text-center relative overflow-hidden">
                         <div className="relative z-10">
                             <div className="w-20 h-20 bg-white text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg animate-bounce">
-                                <HiOutlineCheckCircle className="text-5xl" />
+                                <span className="text-5xl"><HiOutlineCheckCircle /></span>
                             </div>
                             <h1 className="text-3xl font-black text-white mb-2">جاهز للإرسال!</h1>
                             <p className="text-green-100 font-medium text-lg">راجع تفاصيل طلبك قبل الإرسال عبر واتساب</p>
@@ -175,7 +175,7 @@ const OrderConfirmation: React.FC = () => {
                                     <span>جاري التحويل...</span>
                                 ) : (
                                     <>
-                                        <FaWhatsapp className="text-2xl" />
+                                        <span className="text-2xl"><FaWhatsapp /></span>
                                         <span>إرسال الطلب عبر واتساب</span>
                                     </>
                                 )}

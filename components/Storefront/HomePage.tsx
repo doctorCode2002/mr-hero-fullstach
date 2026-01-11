@@ -93,7 +93,7 @@ const HomePage: React.FC = () => {
                 {/* Floating Cards */}
                 <div className="absolute top-10 -right-10 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce border border-white/50">
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                        <HiOutlineTrendingUp className="text-2xl" />
+                        <span className="text-2xl"><HiOutlineTrendingUp /></span>
                     </div>
                     <div>
                         <p className="text-xs text-gray-500 font-bold">توفير يصل إلى</p>
@@ -103,7 +103,7 @@ const HomePage: React.FC = () => {
 
                 <div className="absolute bottom-10 -left-10 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl flex items-center gap-3 animate-pulse border border-white/50">
                     <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-600">
-                        <HiOutlineTruck className="text-2xl" />
+                        <span className="text-2xl"><HiOutlineTruck /></span>
                     </div>
                     <div>
                         <p className="text-xs text-gray-500 font-bold">شحن سريع</p>
@@ -121,7 +121,7 @@ const HomePage: React.FC = () => {
       <section className="bg-white pt-12 pb-6">
         <div className="max-w-xl mx-auto px-4">
           <div className="relative group shadow-xl hover:shadow-2xl transition-all duration-300 rounded-3xl overflow-hidden">
-            <HiOutlineSearch className="absolute right-6 top-1/2 -translate-y-1/2 text-orange-500 text-2xl group-focus-within:scale-110 transition-transform" />
+            <span className="absolute right-6 top-1/2 -translate-y-1/2 text-orange-500 text-2xl group-focus-within:scale-110 transition-transform"><HiOutlineSearch /></span>
             <input 
               type="text" 
               placeholder="ابحث عن باليتة أو صنف..." 
@@ -162,12 +162,12 @@ const HomePage: React.FC = () => {
                             <h3 className="text-xl font-black text-white mb-1">{category.name}</h3>
                             <div className="flex items-center gap-2 text-white font-bold text-xs">
                                 <span>تصفح الآن</span>
-                                <HiOutlineArrowLeft className="text-sm" />
+                                <span className="text-sm"><HiOutlineArrowLeft /></span>
                             </div>
                         </div>
                         
                         <div className="absolute top-6 right-6 w-12 h-12 bg-orange-500/90 backdrop-blur-sm rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100 rotate-12 group-hover:rotate-0">
-                            <HiOutlineCollection className="text-2xl" />
+                            <span className="text-2xl"><HiOutlineCollection /></span>
                         </div>
                     </div>
                 ))}
@@ -189,7 +189,7 @@ const HomePage: React.FC = () => {
                   className="hidden cursor-pointer md:flex items-center gap-2 text-orange-500 font-bold hover:text-primary-hover transition-colors"
                 >
                     <span>عرض الكل</span>
-                    <HiOutlineArrowLeft className="text-lg" />
+                    <span className="text-lg"><HiOutlineArrowLeft /></span>
                 </button>
             </div>
 
@@ -227,7 +227,7 @@ const HomePage: React.FC = () => {
                 <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-white">
                     <div className="space-y-4">
                         <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto md:mr-0 text-orange-500">
-                            <HiOutlineUserGroup className="text-3xl" />
+                            <span className="text-3xl"><HiOutlineUserGroup /></span>
                         </div>
                         <div>
                             <h4 className="text-5xl font-black text-orange-500">+10,000</h4>
@@ -236,7 +236,7 @@ const HomePage: React.FC = () => {
                     </div>
                     <div className="space-y-4">
                         <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto md:mr-0 text-orange-500">
-                            <HiOutlineChartBar className="text-3xl" />
+                            <span className="text-3xl"><HiOutlineChartBar /></span>
                         </div>
                         <div>
                             <h4 className="text-5xl font-black text-orange-500">50M+</h4>
@@ -245,7 +245,7 @@ const HomePage: React.FC = () => {
                     </div>
                     <div className="space-y-4">
                         <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto md:mr-0 text-orange-500">
-                            <HiOutlineCollection className="text-3xl" />
+                            <span className="text-3xl"><HiOutlineCollection /></span>
                         </div>
                         <div>
                             <h4 className="text-5xl font-black text-orange-500">+50</h4>
@@ -254,7 +254,7 @@ const HomePage: React.FC = () => {
                     </div>
                     <div className="space-y-4">
                         <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto md:mr-0 text-orange-500">
-                            <HiOutlineSupport className="text-3xl" />
+                            <span className="text-3xl"><HiOutlineSupport /></span>
                         </div>
                         <div>
                             <h4 className="text-5xl font-black text-orange-500">24/7</h4>
